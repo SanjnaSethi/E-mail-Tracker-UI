@@ -1,17 +1,13 @@
 from tkinter import*
 import tkinter as tk
+import requests 
+from tkinter import messagebox
 
-#Fuction to open the Send Email window
-def open_send_email_window():
-
-  #Window Title 
-  window.title("E-mail Tracker Desktop App")
-
-  def show_messagebox():
-    tk.messagebox.showinfo("E-mail Send", "Your email has been successfully sent!")
-  B = tk.Button(top,text="Send E-mail", command=show_messagebox)
-
-
+def send_email():
+    params={
+    "recipient_list":[""],
+    "subject":"hello"
+    }
 #Root window
 window = tk.Tk()
 window.resizable(False,False)
@@ -35,7 +31,7 @@ recipient_email_list_label = tk.Label(text="Recipient E-mail List", font=("Arial
 recipient_email_list_label.place(x=20, y=110)
 
 #Create a text area for the user to write in
-text_area = tk.Text(window, width=106, height=2)
+text_area = tk.Entry(window, width=106, height=2)
 text_area.place(x=20, y=140)
 
 #Create a label for the subject area title
@@ -43,19 +39,19 @@ subject_of_email_label = tk.Label(text="Subject of E-mail", font=("Arial", 10, "
 subject_of_email_label.place(x=20, y=210)
 
 #Create a subject area for the user to write in
-text_area = tk.Text(window, width=106, height=2)
-text_area.place(x=20, y=240)
+subject_area = tk.Entry(window, width=106, height=2)
+subject_area.place(x=20, y=240)
 
 #Create a label for the body area title
 body_of_email_label = tk.Label(text="Body of E-mail", font=("Arial", 10, "bold"))
 body_of_email_label.place(x=20, y=310)
 
 #Create a body area for the user to write in
-text_area = tk.Text(window, width=106, height=7)
-text_area.place(x=20, y=340)
+body_area = tk.Entry(window, width=106, height=7)
+body_area.place(x=20, y=340)
 
 #Create a Send button
-send_email_button = tk.Button(window, text ="Send E-mail", command=open_send_email_window)
+send_email_button = tk.Button(window, text ="Send E-mail", command=lambda:send_email)
 send_email_button.place(x=450, y=550,anchor="center")
 
 #Starting the mainloop
