@@ -2,7 +2,12 @@ from tkinter import*
 import tkinter as tk
 import numpy as np
 import matplotlib.pyplot as plt
+import requests
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+data=requests.get("https://email-tracking-five.vercel.app/get").json()
+x=data['data']
+x=x.replace("null","None")
+x=eval(x)
 
 def generate_email_data(size = 50):
     
@@ -23,26 +28,43 @@ def generate_pie_data(size = 50):
     return data
 
 def plot_email_data(ax):
-    email_data = generate_email_data()
-    opened_count = np.sum(email_data)
-    not_opened_count = len(email_data) - opened_count
+    newData={"opened":0,"NotOpened":0}
+    for i in x:
+	    if int(i['fields']['status'])>0:
+	        newData['opened']+=1
+	    else:
+		    newData['NotOpened']+=1
+                    
+    EmailOpened = list(newData.keys())
+    EmailNotOpened = list(newData.values())
+ 
+    # creating the bar plot
+    ax.bar(EmailOpened, EmailNotOpened, color ='maroon',width = 0.5)
     
-    labels = ['Opened','Not Opened']
-    sizes = [opened_count, not_opened_count] 
+    ax.set_xlabel("Current Scenario")
+    ax.set_ylabel("Count")
+    ax.set_title("Bar Graph of Open and Not Open Count")
 
-    ax.bar(labels, sizes, color=['skyblue', 'lightcoral'])
-    ax.set_ylabel('count')
-    ax.set_title('Bar Graph')
 
 def plot_email_pie(ax):
     email_pie_data = generate_pie_data()
     opened_count = np.sum(email_pie_data)
     not_opened_count = len(email_pie_data) - opened_count
+    newData={"opened":0,"NotOpened":0}
+    for i in x:
+	    if int(i['fields']['status'])>0:
+	        newData['opened']+=1
+	    else:
+		    newData['NotOpened']+=1
+                    
+    y = np.array([newData['opened'],newData['NotOpened']])
+    mylabels = ["Opened", "Not Opened"]
 
-    labels = ['Opened','Not Opened']
-    colors = ['skyblue', 'lightcoral']
-    explode = (0.1,0) 
-    ax.pie([opened_count, not_opened_count], labels=labels, autopct="%1.1f%%", startangle=90, colors=colors, explode=explode)
+    ax.pie(y, labels = mylabels)
+    # labels = ['Opened','Not Opened']
+    # colors = ['skyblue', 'lightcoral']
+    # explode = (0.1,0) 
+    # ax.pie([opened_count, not_opened_count], labels=labels, autopct="%1.1f%%", startangle=90, colors=colors, explode=explode)
     ax.set_title('Pie Chart')
 
 def plot_email_timeline(ax):
